@@ -7,11 +7,11 @@ module mem8
 	input wire w_en, r_en,
 	input wire [5:0] w_addr, 
     input wire [5:0] r_addr,
-    input reg [WIDTH_X-1:0] d_in, 
-    output reg [WIDTH_X-1:0] d_out
+    input wire signed [WIDTH_X-1:0] d_in, 
+    output reg signed [WIDTH_X-1:0] d_out
 );  
 
-reg [WIDTH_X-1:0] memory8[63:0];
+reg signed [WIDTH_X-1:0] memory8[63:0];
 
 always @(posedge clk) begin
   if (w_en==1)
@@ -20,7 +20,7 @@ end
 
 always @(posedge clk ) begin
     if (!rst_n) begin
-       d_out <= 22'b0;
+       d_out <= 16'b0;
     end else if(r_en) begin
        d_out <= memory8[r_addr];
     end else begin

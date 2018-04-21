@@ -121,13 +121,6 @@ always @(posedge clk) begin
 				y2 <= y2;
 				y3 <= y3;
 		    end
-		default:
-			begin
-				y0 <= y0;
-				y1 <= y1;
-				y2 <= y2;
-				y3 <= y3;
-		    end
 	   endcase
 	 end
 	else if (idct4_2==2'b10) begin
@@ -188,13 +181,6 @@ always @(posedge clk) begin
 				y2 <= add_75;
 				y3 <= add_89;
 			end
-		default:
-			begin
-				y0 <= y0;
-				y1 <= y1;
-				y2 <= y2;
-				y3 <= y3;
-			end	
 		endcase	  
 	 end
 	else

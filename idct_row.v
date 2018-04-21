@@ -7,18 +7,19 @@ module idct_row
 (   
 	input wire clk, rst_n,
 	input wire [1:0]idct4,
-	input wire signed [WIDTH_X-1:0] x_in_origin,
-	output reg  signed [WIDTH_X-1:0] y_out
+	input wire  signed [WIDTH_X-1:0] x_in_origin,
+	output reg  signed [WIDTH_X-1:0] y_out,
+	output reg   [1:0] idct_out
 );  
 
-	reg signed [WIDTH_X-1:0] y0;
-	reg signed [WIDTH_X-1:0] y1;
-	reg signed [WIDTH_X-1:0] y2;
-	reg signed [WIDTH_X-1:0] y3;
-	reg signed [WIDTH_X-1:0] y4;
-	reg signed [WIDTH_X-1:0] y5;
-	reg signed [WIDTH_X-1:0] y6;
-	reg signed [WIDTH_X-1:0] y7;
+	reg  signed [WIDTH_X-1:0] y0;
+	reg  signed [WIDTH_X-1:0] y1;
+	reg  signed [WIDTH_X-1:0] y2;
+	reg  signed [WIDTH_X-1:0] y3;
+	reg  signed [WIDTH_X-1:0] y4;
+	reg  signed [WIDTH_X-1:0] y5;
+	reg  signed [WIDTH_X-1:0] y6;
+	reg  signed [WIDTH_X-1:0] y7;
 
 	reg [2:0] mode;
     reg [2:0] mode_d;
@@ -28,32 +29,31 @@ module idct_row
 	wire [1:0] idct4_3;
 	reg [1:0] idct4_4;
 	reg [1:0] idct4_5;
-	reg [2:0] count_8;
-	reg [3:0] count_4;
-	reg signed [WIDTH_X-1:0] x_in;
+
+	reg   signed [WIDTH_X-1:0] x_in;
 	//reg [1:0] mode_d_delay;
-	wire signed [WIDTH_Y-1:0] x_reg1;
-	wire signed [WIDTH_Y-1:0] x_reg2;   
-	wire signed [WIDTH_Y-1:0] x_reg1_comp;   
-	wire signed [WIDTH_Y-1:0] x_reg2_comp;	   
-   
-	wire signed [WIDTH_Y-1:0] x_reg3;   
-	wire signed [WIDTH_Y-1:0] x_reg4;   
-	wire signed [WIDTH_Y-1:0] x_reg3_comp;   
-	wire signed [WIDTH_Y-1:0] x_reg4_comp;   	
+	wire  signed [WIDTH_Y-1:0] x_reg1;
+	wire  signed [WIDTH_Y-1:0] x_reg2;   
+	wire  signed [WIDTH_Y-1:0] x_reg1_comp;   
+	wire  signed [WIDTH_Y-1:0] x_reg2_comp;	   
+ 
+	wire  signed [WIDTH_Y-1:0] x_reg3;   
+	wire  signed [WIDTH_Y-1:0] x_reg4;   
+	wire  signed [WIDTH_Y-1:0] x_reg3_comp;   
+	wire  signed [WIDTH_Y-1:0] x_reg4_comp;   	
 	
 	
 	//add results 
-	reg signed [WIDTH_Y-1:0] x_add0;
-	reg signed [WIDTH_Y-1:0] x_add1;
-	reg signed [WIDTH_Y-1:0] x_add2;
-	reg signed [WIDTH_Y-1:0] x_add3;
+	reg  signed [WIDTH_Y-1:0] x_add0;
+	reg  signed [WIDTH_Y-1:0] x_add1;
+	reg  signed [WIDTH_Y-1:0] x_add2;
+	reg  signed [WIDTH_Y-1:0] x_add3;
+ 
+	reg  signed [WIDTH_Y-1:0] x_add4;
+	reg  signed [WIDTH_Y-1:0] x_add5;
+	reg  signed [WIDTH_Y-1:0] x_add6;
+	reg  signed [WIDTH_Y-1:0] x_add7;	
 
-	reg signed [WIDTH_Y-1:0] x_add4;
-	reg signed [WIDTH_Y-1:0] x_add5;
-	reg signed [WIDTH_Y-1:0] x_add6;
-	reg signed [WIDTH_Y-1:0] x_add7;	
-	
 	wire signed [WIDTH_Y-1:0] x_add0_op1;
 	wire signed [WIDTH_Y-1:0] x_add0_op2;
 	wire signed [WIDTH_Y-1:0] x_add1_op1;
@@ -72,23 +72,23 @@ module idct_row
 	wire signed [WIDTH_Y-1:0] x_add3_op1_4;
 	wire signed [WIDTH_Y-1:0] x_add3_op2_4;
 
-	wire signed [WIDTH_Y-1:0] x_add0_op1_8;
-	wire signed [WIDTH_Y-1:0] x_add0_op2_8;
-	wire signed [WIDTH_Y-1:0] x_add1_op1_8;
-	wire signed [WIDTH_Y-1:0] x_add1_op2_8;
-	wire signed [WIDTH_Y-1:0] x_add2_op1_8;
-	wire signed [WIDTH_Y-1:0] x_add2_op2_8;
-	wire signed [WIDTH_Y-1:0] x_add3_op1_8;
-	wire signed [WIDTH_Y-1:0] x_add3_op2_8;
-
-	wire signed [WIDTH_Y-1:0] x_add4_op1;
-	wire signed [WIDTH_Y-1:0] x_add4_op2;
-	wire signed [WIDTH_Y-1:0] x_add5_op1;
-	wire signed [WIDTH_Y-1:0] x_add5_op2;
-	wire signed [WIDTH_Y-1:0] x_add6_op1;
-	wire signed [WIDTH_Y-1:0] x_add6_op2;
-	wire signed [WIDTH_Y-1:0] x_add7_op1;
-	wire signed [WIDTH_Y-1:0] x_add7_op2;
+	wire  signed [WIDTH_Y-1:0] x_add0_op1_8;
+	wire  signed [WIDTH_Y-1:0] x_add0_op2_8;
+	wire  signed [WIDTH_Y-1:0] x_add1_op1_8;
+	wire  signed [WIDTH_Y-1:0] x_add1_op2_8;
+	wire  signed [WIDTH_Y-1:0] x_add2_op1_8;
+	wire  signed [WIDTH_Y-1:0] x_add2_op2_8;
+	wire  signed [WIDTH_Y-1:0] x_add3_op1_8;
+	wire  signed [WIDTH_Y-1:0] x_add3_op2_8;
+ 
+	wire  signed [WIDTH_Y-1:0] x_add4_op1;
+	wire  signed [WIDTH_Y-1:0] x_add4_op2;
+	wire  signed [WIDTH_Y-1:0] x_add5_op1;
+	wire  signed [WIDTH_Y-1:0] x_add5_op2;
+	wire  signed [WIDTH_Y-1:0] x_add6_op1;
+	wire  signed [WIDTH_Y-1:0] x_add6_op2;
+	wire  signed [WIDTH_Y-1:0] x_add7_op1;
+	wire  signed [WIDTH_Y-1:0] x_add7_op2;
      
 
 	assign mode_d_4 = mode_d[1:0];
@@ -150,7 +150,7 @@ module idct_row
 	always @ (posedge clk)
 	begin
 		 if(!rst_n)
-			x_in <= 15'b0;
+			x_in <= 16'b0;
 	     else 
 			x_in <= x_in_origin;
 	end	
@@ -270,6 +270,15 @@ module idct_row
 	end 
 
 	always @(posedge clk) begin
+		if (!rst_n)
+			idct_out <= 2'b0;
+		else begin
+			idct_out <= idct4_5;
+		end
+	end
+
+
+	always @(posedge clk) begin
 		if (!rst_n||(idct4_5==2'b0))
 			y_out <= 22'b0;
 		else begin
@@ -282,7 +291,6 @@ module idct_row
 			  3'b111: y_out <= y5;
 			  3'b000: y_out <= y6;
 			  3'b001: y_out <= y7;
-			  default: y_out <= y_out;
 			endcase
 		end
 	end

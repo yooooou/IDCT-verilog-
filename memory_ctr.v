@@ -7,21 +7,22 @@ module memory_ctr
   input wire [1:0] idct4_5,
 	input wire [WIDTH_X-1:0] d_in,
     output reg [1:0] idct4_out,
-    output reg [WIDTH_X-1:0] d_out
+    output reg signed [WIDTH_X-1:0] d_out
 );  
 
-reg [5:0] w_addr, r_addr, w_addr_op;
+reg signed [6:0] w_addr, w_addr_op;
+reg [5:0] r_addr;
 reg [7:0] cnt;
 reg mem1_w_en, mem1_r_en, mem2_w_en, mem2_r_en, mem1_r_en_d, mem2_r_en_d;
-wire [WIDTH_X-1:0] d_out_mem1, d_out_mem2;
+wire signed [WIDTH_X-1:0] d_out_mem1, d_out_mem2;
 reg [1:0] t_rd_sign, idct4_6, idct4_out_t;
 wire t_rd_sign_xor;
 reg read_start;
 
 
-mem8 mem1(clk, rst_n, mem1_w_en, mem1_r_en, w_addr, r_addr, d_in, d_out_mem1);
+mem8 mem1(clk, rst_n, mem1_w_en, mem1_r_en, w_addr[5:0], r_addr, d_in, d_out_mem1);
 
-mem8 mem2(clk, rst_n, mem2_w_en, mem2_r_en, w_addr, r_addr, d_in, d_out_mem2);
+mem8 mem2(clk, rst_n, mem2_w_en, mem2_r_en, w_addr[5:0], r_addr, d_in, d_out_mem2);
 
 always @(posedge clk ) begin
     if (!rst_n)
@@ -84,12 +85,12 @@ always @(*) begin
             w_addr_op = -63;
           end    
   end
-  else  w_addr_op = 6'b0;
+  else  w_addr_op = 7'b0;
 end
 
 always @(posedge clk) begin
   if (!rst_n||(idct4_5==2'b0)) begin
-    w_addr <= 6'b0;
+    w_addr <= 7'b0;
   end else begin
     w_addr <= w_addr_op + w_addr;
   end
@@ -182,7 +183,7 @@ end
 
 always @(posedge clk ) begin
   if (!rst_n) begin
-    d_out <=22'b0;
+    d_out <=16'b0;
   end else if(mem1_r_en_d==1) begin
     d_out <= d_out_mem1;
   end else if(mem2_r_en_d==1) begin
