@@ -1,7 +1,7 @@
 module idct_col
 #(
 	parameter WIDTH_X = 16,
-	parameter WIDTH_Y = 22,
+	parameter WIDTH_Y = 25,
 	parameter SHIFT_COL = 7,
 	parameter ADD_COL = 64
 )
@@ -32,16 +32,16 @@ module idct_col
 	reg [1:0] idct4_4;
 
 	reg   signed [WIDTH_X-1:0] x_in;
-	//reg [1:0] mode_d_delay;
-	wire  signed [WIDTH_Y-1:0] x_reg1;
-	wire  signed [WIDTH_Y-1:0] x_reg2;   
-	wire  signed [WIDTH_Y-1:0] x_reg1_comp;   
-	wire  signed [WIDTH_Y-1:0] x_reg2_comp;	   
+
+	wire  signed [WIDTH_Y-3:0] x_reg1;
+	wire  signed [WIDTH_Y-3:0] x_reg2;   
+	wire  signed [WIDTH_Y-3:0] x_reg1_comp;   
+	wire  signed [WIDTH_Y-3:0] x_reg2_comp;	   
  
-	wire  signed [WIDTH_Y-1:0] x_reg3;   
-	wire  signed [WIDTH_Y-1:0] x_reg4;   
-	wire  signed [WIDTH_Y-1:0] x_reg3_comp;   
-	wire  signed [WIDTH_Y-1:0] x_reg4_comp;   	
+	wire  signed [WIDTH_Y-3:0] x_reg3;   
+	wire  signed [WIDTH_Y-3:0] x_reg4;   
+	wire  signed [WIDTH_Y-3:0] x_reg3_comp;   
+	wire  signed [WIDTH_Y-3:0] x_reg4_comp;   	
 	
 	
 	//add results 
@@ -64,22 +64,22 @@ module idct_col
 	wire signed [WIDTH_Y-1:0] x_add3_op1;
 	wire signed [WIDTH_Y-1:0] x_add3_op2;
 
-	wire signed [WIDTH_Y-1:0] x_add0_op1_4;
+	wire signed [WIDTH_Y-3:0] x_add0_op1_4;
 	wire signed [WIDTH_Y-1:0] x_add0_op2_4;
-	wire signed [WIDTH_Y-1:0] x_add1_op1_4;
+	wire signed [WIDTH_Y-3:0] x_add1_op1_4;
 	wire signed [WIDTH_Y-1:0] x_add1_op2_4;
-	wire signed [WIDTH_Y-1:0] x_add2_op1_4;
+	wire signed [WIDTH_Y-3:0] x_add2_op1_4;
 	wire signed [WIDTH_Y-1:0] x_add2_op2_4;
-	wire signed [WIDTH_Y-1:0] x_add3_op1_4;
+	wire signed [WIDTH_Y-3:0] x_add3_op1_4;
 	wire signed [WIDTH_Y-1:0] x_add3_op2_4;
 
-	wire  signed [WIDTH_Y-1:0] x_add0_op1_8;
+	wire  signed [WIDTH_Y-3:0] x_add0_op1_8;
 	wire  signed [WIDTH_Y-1:0] x_add0_op2_8;
-	wire  signed [WIDTH_Y-1:0] x_add1_op1_8;
+	wire  signed [WIDTH_Y-3:0] x_add1_op1_8;
 	wire  signed [WIDTH_Y-1:0] x_add1_op2_8;
-	wire  signed [WIDTH_Y-1:0] x_add2_op1_8;
+	wire  signed [WIDTH_Y-3:0] x_add2_op1_8;
 	wire  signed [WIDTH_Y-1:0] x_add2_op2_8;
-	wire  signed [WIDTH_Y-1:0] x_add3_op1_8;
+	wire  signed [WIDTH_Y-3:0] x_add3_op1_8;
 	wire  signed [WIDTH_Y-1:0] x_add3_op2_8;
  
 	wire  signed [WIDTH_Y-1:0] x_add4_op1;
@@ -195,14 +195,14 @@ module idct_col
 	begin
 	    if (!rst_n)
 		begin
-		   x_add0 <= 0;
-		   x_add1 <= 0;
-		   x_add2 <= 0;
-		   x_add3 <= 0;
-		   x_add4 <= 0;
-		   x_add5 <= 0;
-		   x_add6 <= 0;
-		   x_add7 <= 0;
+		   x_add0 <= 25'b0;
+		   x_add1 <= 25'b0;
+		   x_add2 <= 25'b0;
+		   x_add3 <= 25'b0;
+		   x_add4 <= 25'b0;
+		   x_add5 <= 25'b0;
+		   x_add6 <= 25'b0;
+		   x_add7 <= 25'b0;
 		end
 	    else begin
 		   x_add0 <= x_add0_op1 + x_add0_op2;
@@ -219,17 +219,16 @@ module idct_col
 	always @ (posedge clk)
 	begin
 		if(!rst_n) begin
-				y0 <= 0;
-				y1 <= 0;
-				y2 <= 0;
-				y3 <= 0;
-				y4 <= 0;
-				y5 <= 0;
-				y6 <= 0;
-				y7 <= 0;
+				y0 <= 16'b0;
+				y1 <= 16'b0;
+				y2 <= 16'b0;
+				y3 <= 16'b0;
+				y4 <= 16'b0;
+				y5 <= 16'b0;
+				y6 <= 16'b0;
+				y7 <= 16'b0;
 				idct4_5 <= 2'b0;
-		end
-		else if ({idct4_4[0],mode_d}==4'b1101) begin
+		end	else if ({idct4_4[0],mode_d}==4'b1101) begin
 				y0 <= x_add0>>>SHIFT_COL;
 				y1 <= x_add1>>>SHIFT_COL;
 				y2 <= x_add2>>>SHIFT_COL;
@@ -239,8 +238,7 @@ module idct_col
 				y6 <= y6;
 				y7 <= y7;
 				idct4_5 <= idct4_5;			
-		end
-		else if ({idct4_4[0],mode_d}==4'b1001) begin
+		end	else if ({idct4_4[0],mode_d}==4'b1001) begin
 				y0 <= y0;
 				y1 <= y1;
 				y2 <= y2;
@@ -250,8 +248,7 @@ module idct_col
 				y6 <= x_add2>>>SHIFT_COL;
 				y7 <= x_add3>>>SHIFT_COL;
 				idct4_5 <= 2'b01;						
-		end		
-		else if ({idct4_4[1],mode_d}==4'b1001) begin
+		end	else if ({idct4_4[1],mode_d}==4'b1001) begin
 				y0 <= x_add0>>>SHIFT_COL;
 				y1 <= x_add1>>>SHIFT_COL;
 				y2 <= x_add2>>>SHIFT_COL;
@@ -261,8 +258,7 @@ module idct_col
 				y6 <= x_add6>>>SHIFT_COL;
 				y7 <= x_add7>>>SHIFT_COL;
 				idct4_5 <= 2'b10;		  
-		end
-		else   begin
+		end	else begin
 				y0 <= y0;
 				y1 <= y1;
 				y2 <= y2;

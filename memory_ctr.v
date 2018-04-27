@@ -5,14 +5,14 @@ module memory_ctr
 (   
 	input wire clk, rst_n, 
   input wire [1:0] idct4_5,
-	input wire [WIDTH_X-1:0] d_in,
+	input wire signed [WIDTH_X-1:0] d_in,
     output reg [1:0] idct4_out,
     output reg signed [WIDTH_X-1:0] d_out
 );  
 
 reg signed [6:0] w_addr, w_addr_op;
 reg [5:0] r_addr;
-reg [7:0] cnt;
+reg [6:0] cnt;
 reg mem1_w_en, mem1_r_en, mem2_w_en, mem2_r_en, mem1_r_en_d, mem2_r_en_d;
 wire signed [WIDTH_X-1:0] d_out_mem1, d_out_mem2;
 reg [1:0] t_rd_sign, idct4_6, idct4_out_t;
@@ -111,7 +111,7 @@ end
 always @(posedge clk ) begin
   if (!rst_n) begin
     read_start <= 0;
-  end else if ((t_rd_sign_xor==1)&&(cnt[6:0]==6'b110001)) begin
+  end else if ((t_rd_sign_xor==1)&&(cnt[5:0]==6'b110001)) begin
     read_start <= 1;
   end else begin
     read_start <= 0;

@@ -3,15 +3,15 @@ module idct_chip(clk,rstn,mode,start,din,dout,dout_mode);
 input clk,rstn;
 input [1:0] mode;
 input start;
-input [15:0] din;
+input signed [15:0] din;
 
-output [15:0] dout;
+output signed [15:0] dout;
 output [1:0] dout_mode;
 
 wire net_clk,net_rstn;
 wire [1:0] net_mode,net_dout_mode;
 wire net_start;
-wire [15:0] net_din,net_dout;
+wire signed [15:0] net_din,net_dout;
 
 PIW
 	PIW_clk(.PAD(clk),.C(net_clk)),

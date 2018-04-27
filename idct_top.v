@@ -7,7 +7,7 @@ module idct_top
 	output signed [15:0] z_out,
 	output [1:0] idct_out
 );
-wire [15:0] y_col_out, y_row_in;
+wire signed [15:0] y_col_out, y_row_in;
 wire [1:0] idct_5, idct_row_in;
 
 idct_col idct_col(clk, rst_n, idct, start, x_in, y_col_out, idct_5);
